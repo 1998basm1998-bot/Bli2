@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق السائق الزجاجي</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <div class="app-container glass">
+        <header class="app-header">
+            <h3>لوحة القيادة - السائق</h3>
+            <div id="driver-status-badge" class="badge status-available">متاح</div>
+        </header>
+
+        <section id="home" class="tab-content active">
+            <h2>مرحباً بك يا كابتن! <i class="fas fa-hand-sparkles"></i></h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-bell"></i>
+                    <h3 id="stat-new">0</h3>
+                    <p>طلبات جديدة</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 id="stat-completed">0</h3>
+                    <p>مكتملة</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-times-circle"></i>
+                    <h3 id="stat-canceled">0</h3>
+                    <p>ملغاة</p>
+                </div>
+            </div>
+
+            <button class="btn primary-btn mt-15" onclick="switchTab('requests')">عرض الطلبات الجديدة</button>
+            <button class="btn calc-btn mt-15" onclick="loadData()">تحديث البيانات <i class="fas fa-sync-alt"></i></button>
+
+            <h3 class="mt-20">آخر طلب مسجل:</h3>
+            <div id="last-ride-summary" class="ride-card mini-card">
+                لا توجد طلبات حالياً.
+            </div>
+        </section>
+
+        <section id="requests" class="tab-content">
+            <h2>الطلبات المتاحة</h2>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterRequests('all')">الكل</button>
+                <button class="filter-btn" onclick="filterRequests('new')">الجديدة</button>
+            </div>
+            <div id="requests-list" class="rides-list">
+                </div>
+        </section>
+
+        <section id="map-view" class="tab-content">
+            <h2>خارطة الطلب</h2>
+            <div id="map-info-card" class="ride-card" style="display: none;">
+                </div>
+            <div id="map-container" class="map-box"></div>
+            <div class="actions mt-15" id="map-actions" style="display: none;">
+                <button class="btn calc-btn" onclick="switchTab('requests')">العودة للطلبات</button>
+                <button class="btn primary-btn" onclick="showToast('جاري فتح الاتجاهات...', 'info')">فتح الاتجاهات <i class="fas fa-route"></i></button>
+            </div>
+        </section>
+
+        <section id="history" class="tab-content">
+            <h2>سجل الرحلات</h2>
+            <div id="history-list" class="rides-list">
+                </div>
+        </section>
+
+        <section id="account" class="tab-content">
+            <div class="avatar-container">
+                <div class="avatar"><i class="fas fa-user-tie"></i></div>
+            </div>
+            <h2>الملف الشخصي</h2>
+            
+            <div class="form-group">
+                <label>اسم السائق:</label>
+                <input type="text" id="driver-name" placeholder="أدخل اسمك">
+            </div>
+            <div class="form-group">
+                <label>رقم الهاتف:</label>
+                <input type="text" id="driver-phone" placeholder="07xxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label>نوع السيارة:</label>
+                <input type="text" id="driver-car" placeholder="مثال: تويوتا كامري">
+            </div>
+            <div class="form-group">
+                <label>المدينة:</label>
+                <input type="text" id="driver-city" placeholder="مدينتك">
+            </div>
+
+            <button class="btn primary-btn" onclick="saveDriverProfile()">حفظ البيانات</button>
+            <button class="btn calc-btn mt-10" onclick="fillMockProfile()">تعبئة بيانات تجريبية</button>
+            <button class="btn mt-10" style="background: #4a5568; color:white;" onclick="toggleDriverStatus()">تغيير الحالة (متاح/غير متاح)</button>
+        </section>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('home')"><i class="fas fa-home"></i><span>الرئيسية</span></button>
+            <button class="nav-item" onclick="switchTab('requests')"><i class="fas fa-list"></i><span>الطلبات</span></button>
+            <button class="nav-item" onclick="switchTab('map-view')"><i class="fas fa-map-marked-alt"></i><span>الخارطة</span></button>
+            <button class="nav-item" onclick="switchTab('history')"><i class="fas fa-history"></i><span>رحلاتي</span></button>
+            <button class="nav-item" onclick="switchTab('account')"><i class="fas fa-user-circle"></i><span>حسابي</span></button>
+        </nav>
+
+        <div id="toast-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
